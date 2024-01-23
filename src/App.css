@@ -6,7 +6,9 @@
 }
 
 .second input,
-.second button {
+.second button,
+.modalContent input,
+.modalContent button {
   width: 80%;
   height: 2rem;
   color: black;
@@ -33,7 +35,7 @@
   width: 100%;
   border-radius: 0.5rem;
   padding: 0 1rem 1rem 1rem;
-  background-color: beige;
+  background-color: lightgray;
 }
 
 .listBox div {
@@ -41,9 +43,10 @@
 }
 
 .listBox div button {
-  width: 5rem;
+  width: 4.5rem;
   height: 2rem;
   color: black;
+  text-align: center;
   border-radius: 0.5rem;
   outline: 0.1rem black;
   padding: 0.25rem;
@@ -52,4 +55,24 @@
 
 .emptyRegion {
   display: none;
+}
+
+.modalContainer {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: lightgray;
+}
+
+.modalContent {
+  position: absolute;
+  background-color: white;
+  width: 20rem;
+  height: 20rem;
+  padding: 1rem;
 }

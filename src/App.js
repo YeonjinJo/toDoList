@@ -4,35 +4,48 @@ import "./App.css";
 function ToDo(props) {
   return (
     <div>
-      <h3>제목 : {props.todo.title}</h3>
-      <p>내용 : {props.todo.content}</p>
+      <h3>Title : {props.todo.title}</h3>
+      <p>content : {props.todo.content}</p>
       <button onClick={() => props.check(props.todo.id)}>
-        {props.todo.isDone ? "취소하기" : "완료하기"}
+        {props.todo.isDone ? "Cancel" : "Complete"}
       </button>
-      <button onClick={() => props.remove(props.todo.id)}>삭제하기</button>
+      <button onClick={() => props.modify(props.todo.id)}>Modify</button>
+      <button onClick={() => props.remove(props.todo.id)}>Remove</button>
     </div>
   );
 }
 
 function App() {
   const [todo, setTodo] = useState([
-    { id: 1, title: "예시 1", content: "예시 1", isDone: false },
-    { id: 2, title: "예시 2", content: "예시 2", isDone: false },
-    { id: 3, title: "예시 3", content: "예시 3", isDone: true },
+    { id: 1, title: "Example 1", content: "Example 1", isDone: false },
+    { id: 2, title: "Example 2", content: "Example 2", isDone: false },
+    { id: 3, title: "Example 3", content: "Example 3", isDone: true },
   ]);
+
+  const [idNumber, setIdNumber] = useState(0);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [modifiedTitle, setModifiedTitle] = useState("");
+  const [modifiedContent, setModifiedContent] = useState("");
   const [isDone, setIsDone] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const addHandler = () => {
-    const newToDo = {
-      id: todo.length + 1,
-      title,
-      content,
-      isDone,
-    };
-    setTodo([...todo, newToDo]);
+    if (title === "" || content === "") {
+      alert("Empty!");
+    } else {
+      const newToDo = {
+        id: todo.length + 1,
+        title,
+        content,
+        isDone,
+      };
+      setTodo([...todo, newToDo]);
+      setTitle("");
+      setContent("");
+    }
   };
+
   const removeHandler = (id) => {
     const newList = todo.filter((index) => index.id !== id);
     setTodo(newList);
@@ -53,26 +66,60 @@ function App() {
     });
   };
 
+  const modifyModalOpen = (id) => {
+    setIdNumber(id);
+    setModalOpen(true);
+  };
+
+  const modifyHandler = (id) => {
+    if (modifiedTitle === "" || modifiedContent === "") {
+      alert("Nothing is modified! Try again.");
+      setModalOpen(true);
+    } else {
+      todo.forEach((arr, index) => {
+        if (arr.id === id) {
+          todo.splice(index, 1);
+          const newToDo = {
+            id: arr.id,
+            title: modifiedTitle,
+            content: modifiedContent,
+            isDone,
+          };
+          setTodo([...todo, newToDo]);
+          setModifiedTitle("");
+          setModifiedContent("");
+          alert("Modified!");
+        }
+      });
+      setModalOpen(false);
+    }
+  };
+
   return (
     <div className="first">
       <h1>Yeonjin's React Basic Practice</h1>
       <div className="second">
         <input
           value={title}
-          placeholder="제목을 입력해주세요."
+          placeholder="Insert your To Do title."
           onChange={(event) => {
             setTitle(event.target.value);
           }}
         />
         <input
           value={content}
-          placeholder="내용을 입력해주세요."
+          placeholder="Insert your To Do content."
           onChange={(event) => {
             setContent(event.target.value);
           }}
         />
-        <button onClick={addHandler}>
-          추가하기
+        <button
+          onClick={(event) => {
+            setIsDone(event.target.value);
+            addHandler();
+          }}
+        >
+          Add new To Do
         </button>
       </div>
       <div className="third">
@@ -85,8 +132,9 @@ function App() {
               <ToDo
                 todo={index}
                 key={index.id}
-                remove={removeHandler}
                 check={checkHandler}
+                modify={modifyModalOpen}
+                remove={removeHandler}
               />
             );
           })}
@@ -98,8 +146,9 @@ function App() {
               <ToDo
                 todo={index}
                 key={index.id}
-                remove={removeHandler}
                 check={checkHandler}
+                modify={modifyModalOpen}
+                remove={removeHandler}
               />
             ) : (
               <p className="emptyRegion" key={index.id}></p>
@@ -107,6 +156,43 @@ function App() {
           })}
         </div>
       </div>
+
+      {modalOpen && (
+        <div className="modalContainer">
+          <div className="modalContent">
+            <input
+              value={modifiedTitle}
+              placeholder="Modify your To Do title."
+              onChange={(event) => {
+                setModifiedTitle(event.target.value);
+              }}
+            />
+            <input
+              value={modifiedContent}
+              placeholder="Modify your To Do content."
+              onChange={(event) => {
+                setModifiedContent(event.target.value);
+              }}
+            />{" "}
+            <button
+              className="modalModifyButton"
+              onClick={() => {
+                modifyHandler(idNumber);
+              }}
+            >
+              Modify
+            </button>
+            <button
+              className="modalCloseButton"
+              onClick={() => {
+                setModalOpen(false);
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
