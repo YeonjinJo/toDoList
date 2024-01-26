@@ -1,4 +1,5 @@
 import { useState } from "react";
+import uuid from 'react-uuid'
 import "./App.css";
 
 function ToDo(props) {
@@ -16,12 +17,7 @@ function ToDo(props) {
 }
 
 function App() {
-  const [todo, setTodo] = useState([
-    { id: 1, title: "Example 1", content: "Example 1", isDone: false },
-    { id: 2, title: "Example 2", content: "Example 2", isDone: false },
-    { id: 3, title: "Example 3", content: "Example 3", isDone: true },
-  ]);
-
+  const [todo, setTodo] = useState([]);
   const [idNumber, setIdNumber] = useState(0);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -35,7 +31,7 @@ function App() {
       alert("Empty!");
     } else {
       const newToDo = {
-        id: todo.length + 1,
+        id: uuid(),
         title,
         content,
         isDone,
@@ -122,6 +118,7 @@ function App() {
           Add new To Do
         </button>
       </div>
+      
       <div className="third">
         <h2>On progress</h2>
         <div className="listBox">
